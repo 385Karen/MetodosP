@@ -7,7 +7,7 @@ import scipy.stats as stats
 from scipy.stats import kurtosis, skew, shapiro ,norm, t
 import altair as alt
 
-#HOLA 
+
 
 st.cache_data.clear()
 
@@ -21,24 +21,12 @@ st.title("Visualización de Rendimientos de Acciones")
 # st.write('hola')
 @st.cache_data
 def obtener_datos(stocks):
-    df = yf.download(stocks, period="1y")['Close']
+    df = yf.download(stocks, start="2010-01-01")['Close']
     return df
 
 @st.cache_data
 def calcular_rendimientos(df):
     return df.pct_change().dropna()
-
-
-    #for i in range(len(returns) - window):
-        #window_data = returns[i:i + window]
-        #mean, std = np.mean(window_data), np.std(window_data)
-        
-
-# Lista de acciones de ejemplo
-#url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-#df = pd.read_html(url, header=0)[0]  # Extrae la tabla de Wikipedia
-#stocks_lista = df['Symbol'].tolist()
-#stocks_lista = [ticker.replace('.', '-') for ticker in df['Symbol'].tolist()]
 
 # Lista de acciones de ejemplo
 stocks_lista = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN']
@@ -48,6 +36,7 @@ with st.spinner("Descargando datos..."):
     df_precios = obtener_datos(stocks_lista)
     df_rendimientos = calcular_rendimientos(df_precios)
 
+    print(df_rendimientos)
 
 #######################################---FRONTEND---##################################################
 
@@ -103,10 +92,14 @@ if stock_seleccionado:
         resultados.append([alpha, hVaR, ES_hist, VaR_norm, ES_norm, VaR_t, ES_t, VaR_mc, ES_mc])
     
     # Crear DataFrame que contiene el VaR y ES para cada nivel de confianza
+
     df_resultados = pd.DataFrame(resultados, columns=["Alpha", "hVaR", "ES_hist", "VaR_Norm", "ES_Norm", "VaR_t", "ES_t", "VaR_MC", "ES_MC"])
+
     #Basicamente mostramos en patalla el dataframe antes creado
+
     st.subheader("Tabla comparativa de VaR y ES")
     st.text("Esta tabla muestra los resultados de los diferentes metodos de calculo de VaR y ES")
+
     #Mostramos el dataframe en pantalla de manera bonita
     st.dataframe(
     df_resultados.set_index("Alpha").style.format("{:.4%}")
@@ -123,3 +116,49 @@ if stock_seleccionado:
     st.subheader("Gráfico de comparación de VaR y ES")
     st.text("Este gráfico muestra la comparación de los diferentes métodos de cálculo de VaR y ES")
     st.bar_chart(df_resultados.set_index("Alpha").T)
+
+    
+    ##################################################################################################
+    
+    #Calculo de VaR y ES con Rolling Window
+
+    st.subheader(f"Cálculo de VaR y ES con Rolling Window para {stock_seleccionado}")
+    
+    # Parámetros
+    window_size = 252  # Ventana de 252 días
+    alphas2 = [0.95, 0.99]
+
+    VaR_rolling = {alpha: [] for alpha in alphas2}
+    ES_rolling = {alpha: [] for alpha in alphas2}
+    fechas = df_rendimientos.index[window_size:]
+    
+    
+    # Cálculo de VaR y ES con rolling window
+    for i in range(len(fechas)):
+        ventana = df_rendimientos.iloc[i:i+window_size]
+        Media_R = ventana.mean()
+        Std_R = ventana.std()
+        
+        for alpha in alphas2:
+            var_param = norm.ppf(1 - alpha, Media_R, Std_R)
+            es_param = ventana[ventana <= var_param].mean()
+            
+            VaR_rolling[alpha].append(var_param)
+            ES_rolling[alpha].append(es_param)
+
+
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(fechas, df_rendimientos.iloc[window_size:], label='Retornos', color='blue', alpha=0.5)
+    ax.plot(fechas, VaR_rolling[0.95], label='VaR 95%', color='red')
+    ax.plot(fechas, ES_rolling[0.95], label='ES 95%', color='darkred', linestyle='dashed')
+    ax.plot(fechas, VaR_rolling[0.99], label='VaR 99%', color='green')
+    ax.plot(fechas, ES_rolling[0.99], label='ES 99%', color='darkgreen', linestyle='dashed')
+    
+    ax.set_title(f'VaR y ES con Rolling Window ({stock_seleccionado})')
+    ax.set_xlabel('Fecha')
+    ax.set_ylabel('Retornos')
+    ax.legend()
+    ax.grid()
+    
+    st.pyplot(fig)
