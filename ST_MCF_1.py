@@ -135,16 +135,32 @@ if stock_seleccionado:
     #GRAFICA AGREGADA AL FINAL CUANDO MIS HUEVOS PELIGRABAN DE LOS RENDIMIENTOS DIARIOS PA Q SE VEA BONITO
 
     st.subheader("Gráfico de Rendimientos Diarios") #oliwis :)
+    # Crear el gráfico interactivo con Plotly
+    fig = px.line(df_rendimientos, 
+              x=df_rendimientos.index, 
+              y=stock_seleccionado,
+              labels={'x': 'Fecha', 'y': 'Rendimiento (%)'},
+              title=f"Rendimientos de {stock_seleccionado}")
+    # Personalizar el hover data
+    fig.update_traces(hovertemplate=
+                  "<b>Fecha</b>: %{x|%Y-%m-%d}<br>" +
+                  "<b>Rendimiento</b>: %{y:.2f}%<extra></extra>",
+                  line=dict(color='blue', width=1.5),
+                  opacity=0.5)
 
-    fig, ax = plt.subplots(figsize=(13, 5))
-    ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
-    ax.axhline(y=0, color='black', linestyle='-', alpha=0.7)
-    ax.set_title(f"Rendimientos de {stock_seleccionado}")
-    ax.set_title(f"Rendimientos de {stock_seleccionado}")
-    ax.set_xlabel('Fecha')
-    ax.set_ylabel('Porcentaje (%)')
-    ax.legend()
-    st.pyplot(fig)
+    # Agregar línea horizontal en cero
+    fig.add_hline(y=0, line_dash="solid", line_color="black", line_width=1, opacity=0.7)
+
+    # Configuraciones adicionales del layout
+    fig.update_layout(
+    hovermode="x unified",
+    xaxis_title='Fecha',
+    yaxis_title='Porcentaje (%)',
+    height=500,
+    width=1300)
+
+    # Mostrar el gráfico en Streamlit
+    st.plotly_chart(fig)
 
     # Calcular rendimientos logarítmicos 
     #Aaaaaaaaaaaaaaaa pero queria que se viera bonito
