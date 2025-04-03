@@ -162,14 +162,14 @@ if stock_seleccionado:
     st.text("Resultados mediante diferentes métodos para el cálculo del VaR y ES")
     st.dataframe(
     df_resultados.set_index("Alpha").style.format("{:.4%}")
-    .applymap(lambda _: "background-color: #F0F4F8; color: black;", subset=["hVaR"])  # Azul muy suave grisáceo
-    .applymap(lambda _: "background-color: #D9E2EC; color: black;", subset=["ES_hist"])  # Azul grisáceo claro
-    .applymap(lambda _: "background-color: #BCC9D9; color: black;", subset=["VaR_Norm"])  # Azul grisáceo medio
-    .applymap(lambda _: "background-color: #A7B6C2; color: black;", subset=["ES_Norm"])  # Azul grisáceo oscuro
-    .applymap(lambda _: "background-color: #E1E8F0; color: black;", subset=["VaR_t"])  # Azul grisáceo muy claro
-    .applymap(lambda _: "background-color: #B8C6D1; color: black;", subset=["ES_t"])  # Azul grisáceo suave
-    .applymap(lambda _: "background-color: #9AACC4; color: black;", subset=["VaR_MC"])  # Azul grisáceo más fuerte
-    .applymap(lambda _: "background-color: #8A99B2; color: black;", subset=["ES_MC"])  # Azul grisáceo más oscuro
+    .applymap(lambda _: "background-color: #D1C4E9; color: black;", subset=["hVaR"])  # Morado grisáceo
+    .applymap(lambda _: "background-color: #B3B9D1; color: black;", subset=["ES_hist"])  # Azul grisáceo
+    .applymap(lambda _: "background-color: #D1C4E9; color: black;", subset=["VaR_Norm"])  # Morado grisáceo
+    .applymap(lambda _: "background-color: #B3B9D1; color: black;", subset=["ES_Norm"])  # Azul grisáceo
+    .applymap(lambda _: "background-color: #D1C4E9; color: black;", subset=["VaR_t"])  # Morado grisáceo
+    .applymap(lambda _: "background-color: #B3B9D1; color: black;", subset=["ES_t"])  # Azul grisáceo
+    .applymap(lambda _: "background-color: #D1C4E9; color: black;", subset=["VaR_MC"])  # Morado grisáceo
+    .applymap(lambda _: "background-color: #B3B9D1; color: black;", subset=["ES_MC"])  # Azul grisáceo
 )
 
     st.subheader("Gráfico de comparación de VaR y ES")
