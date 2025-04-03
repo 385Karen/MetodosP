@@ -137,7 +137,8 @@ if stock_seleccionado:
 
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
-    ax.axhline(y=0, color='r', linestyle='--', alpha=0.7)
+    ax.axhline(y=0, color='black', linestyle='-', alpha=0.7)
+    ax.set_title(f"Rendimientos de {stock_seleccionado}")
     ax.set_title(f"Rendimientos de {stock_seleccionado}")
     ax.set_xlabel('Fecha')
     ax.set_ylabel('Porcentaje (%)')
