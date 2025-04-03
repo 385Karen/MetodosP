@@ -172,9 +172,20 @@ if stock_seleccionado:
     .applymap(lambda _: "background-color: #B3B9D1; color: black;", subset=["ES_MC"])  # Azul grisáceo
 )
 
-    st.subheader("Gráfico de comparación de VaR y ES")
-    st.text("Este gráfico muestra la comparación de los diferentes métodos de cálculo de VaR y ES")
-    st.bar_chart(df_resultados.set_index("Alpha").T)
+    fig, ax = plt.subplots(figsize=(12, 7))  # Tamaño del gráfico
+    df_resultados.set_index("Alpha").T.plot(kind='bar', ax=ax, color=['#4C6A92', '#8A9BAE', '#A4BCC6', '#BCC8D4', '#D2E1EC', '#F0F4F9', '#A3B8D7', '#8B98B4'])
+
+    # Título y etiquetas
+    ax.set_title("Comparación de VaR y ES", fontsize=18, fontweight='bold')
+    ax.set_xlabel("Métodos de Cálculo", fontsize=14)
+    ax.set_ylabel("Valores", fontsize=14)
+
+    # Personalizar el diseño del gráfico
+    ax.grid(True, axis='y', linestyle='--', alpha=0.7)  # Añadir rejilla en el eje Y
+    ax.legend(title='Métodos', title_fontsize='13', fontsize='11')  # Personalización de la leyenda
+
+    # Mostrar el gráfico en Streamlit
+    st.pyplot(fig)
 
     
     ##################################################################################################
