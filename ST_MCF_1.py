@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from scipy.stats import kurtosis, skew, shapiro ,norm, t
 import altair as alt
+import plotly.express as px
 
 
 st.cache_data.clear()
@@ -135,7 +136,7 @@ if stock_seleccionado:
 
     st.subheader("Gráfico de Rendimientos Diarios") #oliwis :)
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(13, 5))
     ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
     ax.axhline(y=0, color='black', linestyle='-', alpha=0.7)
     ax.set_title(f"Rendimientos de {stock_seleccionado}")
