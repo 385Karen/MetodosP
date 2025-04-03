@@ -130,9 +130,9 @@ if stock_seleccionado:
     col3.metric("Skew", f"{skew:.2}")
 
     st.subheader("Gráfico de Rendimientos Diarios")
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 6)) ##deje el tamaño original
     ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
-    ax.axhline(y=0, line_dash='solid', line_color='grey', line_width=1)
+    ax.axhline(y=0, color='grey', linestyle='-', linewidth=0.5)
     ax.set_xlabel('Fecha')
     ax.set_ylabel('Porcentajes (%)')
     ax.legend()
