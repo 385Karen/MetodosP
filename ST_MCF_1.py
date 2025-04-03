@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from scipy.stats import kurtosis, skew, shapiro ,norm, t
 import altair as alt
-import plotly.express as px
 
 
 st.cache_data.clear()
@@ -124,43 +123,20 @@ if stock_seleccionado:
     rendimiento_medio = df_rendimientos[stock_seleccionado].mean()
     Kurtosis = kurtosis(df_rendimientos[stock_seleccionado])
     skew = skew(df_rendimientos[stock_seleccionado])
-    
 
-    
     col1, col2, col3= st.columns(3)
     col1.metric("Rendimiento Medio Diario", f"{rendimiento_medio:.4%}")
     col2.metric("Kurtosis", f"{Kurtosis:.4}")
     col3.metric("Skew", f"{skew:.2}")
 
-    #GRAFICA AGREGADA AL FINAL CUANDO MIS HUEVOS PELIGRABAN DE LOS RENDIMIENTOS DIARIOS PA Q SE VEA BONITO
-
-    st.subheader("Gráfico de Rendimientos Diarios") #oliwis :)
-    # Crear el gráfico interactivo con Plotly
-    fig = px.line(df_rendimientos, 
-              x=df_rendimientos.index, 
-              y=stock_seleccionado,
-              labels={'x': 'Fecha', 'y': 'Rendimiento (%)'},
-              title=f"Rendimientos de {stock_seleccionado}")
-    # Personalizar el hover data
-    fig.update_traces(hovertemplate=
-                  "<b>Fecha</b>: %{x|%Y-%m-%d}<br>" +
-                  "<b>Rendimiento</b>: %{y:.2f}%<extra></extra>",
-                  line=dict(color='blue', width=1.5),
-                  opacity=0.5)
-
-    # Agregar línea horizontal en cero
-    fig.add_hline(y=0, line_dash="solid", line_color="black", line_width=1, opacity=0.7)
-
-    # Configuraciones adicionales del layout
-    fig.update_layout(
-    hovermode="x unified",
-    xaxis_title='Fecha',
-    yaxis_title='Porcentaje (%)',
-    height=500,
-    width=1300)
-
-    # Mostrar el gráfico en Streamlit
-    st.plotly_chart(fig)
+    st.subheader("Gráfico de Rendimientos Diarios")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
+    ax.axhline(y=0, line_dash='solid', line_color='grey', line_width=1)
+    ax.set_xlabel('Fecha')
+    ax.set_ylabel('Porcentajes (%)')
+    ax.legend()
+    st.pyplot(fig)
 
     # Calcular rendimientos logarítmicos 
     #Aaaaaaaaaaaaaaaa pero queria que se viera bonito
