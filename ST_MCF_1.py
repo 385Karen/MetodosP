@@ -400,9 +400,10 @@ if stock_seleccionado:
         return f'color: {color}; font-weight: bold'
 
     st.dataframe(
-        df_resultados.style
-        .format({'Porcentaje (%)': '{:.2f}%', 'Observaciones Válidas': '{:.0f}'})
-        .applymap(color_porcentaje, subset=['Porcentaje (%)'])
+    df_resultados.style
+    .format({'Porcentaje (%)': '{:.2f}%', 'Observaciones Válidas': '{:.0f}'})
+    .applymap(color_porcentaje, subset=['Porcentaje (%)']),
+    hide_index=True  # Ocultar la primera columna de índice
     )
 
     ############################################################################################### jajajaj q cagdo pongo esto pa separar y creo q se ve mas ogt
