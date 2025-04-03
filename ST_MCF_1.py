@@ -112,11 +112,9 @@ with st.spinner("Descargando datos..."):
 #######################################---FRONTEND---##################################################
 
 st.header("Selección de Acción")
-
 st.text("Selecciona una acción de la lista ya que apartir de ella se calculara todo lo que se indica en cada ejercicio")
 
 stock_seleccionado = st.selectbox("Selecciona una acción", stocks_lista)
-
 if stock_seleccionado:
     st.subheader(f"Métricas de Rendimiento: {stock_seleccionado}")
     
@@ -129,18 +127,16 @@ if stock_seleccionado:
     col2.metric("Kurtosis", f"{Kurtosis:.4}")
     col3.metric("Skew", f"{skew:.2}")
 
+# Gráfico rendimiento diarios logaritmicos
     st.subheader("Gráfico de Rendimientos Diarios")
     fig, ax = plt.subplots(figsize=(12, 6)) ##deje el tamaño original
     ax.plot(df_rendimientos.index, df_rendimientos[stock_seleccionado] * 100, label='rendimientos (%)', color='blue', alpha=0.5)
-    ax.axhline(y=0, color='grey', linestyle='-', linewidth=0.5)
+    ax.axhline(y=0, color='grey', linestyle='-', linewidth=2)
+    ax.set_title(f"Rendimientos de {stock_seleccionado}")
     ax.set_xlabel('Fecha')
-    ax.set_ylabel('Porcentajes (%)')
+    ax.set_ylabel('Porcentaje (%)')
     ax.legend()
     st.pyplot(fig)
-
-    # Calcular rendimientos logarítmicos 
-    #Aaaaaaaaaaaaaaaa pero queria que se viera bonito
-
 
     #Calculo de Value-At-Risk y de Expected Shortfall (historico)
 
@@ -162,19 +158,19 @@ if stock_seleccionado:
 
     df_resultados = pd.DataFrame(resultados, columns=["Alpha", "hVaR", "ES_hist", "VaR_Norm", "ES_Norm", "VaR_t", "ES_t", "VaR_MC", "ES_MC"])
 
-    st.subheader("Tabla comparativa de VaR y ES")
-    st.text("Esta tabla muestra los resultados de los diferentes métodos de cálculo de VaR y ES")
+    st.subheader("Tabla comparativa del VaR y ES")
+    st.text("Resultados mediante diferentes métodos para el cálculo del VaR y ES")
     st.dataframe(
-        df_resultados.set_index("Alpha").style.format("{:.4%}")
-        .applymap(lambda _: "background-color: #FFDDC1; color: black;", subset=["hVaR"])  # Durazno 
-        .applymap(lambda _: "background-color: #C1E1FF; color: black;", subset=["ES_hist"])  # Azul 
-        .applymap(lambda _: "background-color: #B5EAD7; color: black;", subset=["VaR_Norm"])  # Verde 
-        .applymap(lambda _: "background-color: #FFB3BA; color: black;", subset=["ES_Norm"])  # Rosa 
-        .applymap(lambda _: "background-color: #FFDAC1; color: black;", subset=["VaR_t"])  # Naranja 
-        .applymap(lambda _: "background-color: #E2F0CB; color: black;", subset=["ES_t"])  # Verde 
-        .applymap(lambda _: "background-color: #D4A5A5; color: black;", subset=["VaR_MC"])  # Rojo 
-        .applymap(lambda _: "background-color: #CBAACB; color: black;", subset=["ES_MC"])  # Lila 
-    )
+    df_resultados.set_index("Alpha").style.format("{:.4%}")
+    .applymap(lambda _: "background-color: #FFEBCC; color: black;", subset=["hVaR"])  # Amarillo suave
+    .applymap(lambda _: "background-color: #D1F2FF; color: black;", subset=["ES_hist"])  # Azul claro
+    .applymap(lambda _: "background-color: #D4F1C1; color: black;", subset=["VaR_Norm"])  # Verde claro
+    .applymap(lambda _: "background-color: #FAD0C9; color: black;", subset=["ES_Norm"])  # Rosa pastel
+    .applymap(lambda _: "background-color: #FFE6B3; color: black;", subset=["VaR_t"])  # Naranja pastel
+    .applymap(lambda _: "background-color: #DFFFE0; color: black;", subset=["ES_t"])  # Verde menta
+    .applymap(lambda _: "background-color: #F6D7D7; color: black;", subset=["VaR_MC"])  # Rojo suave
+    .applymap(lambda _: "background-color: #E9D0EC; color: black;", subset=["ES_MC"])  # Lila claro
+)
 
     st.subheader("Gráfico de comparación de VaR y ES")
     st.text("Este gráfico muestra la comparación de los diferentes métodos de cálculo de VaR y ES")
